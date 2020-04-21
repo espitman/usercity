@@ -1,0 +1,14 @@
+{
+  "port": 3101,
+  "swagger": {
+    "title": "UserCity",
+    "version": "1.0.0"
+  },
+  "database": {
+    "user": "root",
+    "password": "rootpassword",
+    "database": "UserCity",
+    "host": "37.152.181.202",
+    "port": 27017
+  }
+}
