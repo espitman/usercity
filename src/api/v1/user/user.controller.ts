@@ -4,7 +4,8 @@ import {
   UsePipes,
   Body,
   Get,
-  NotFoundException
+  NotFoundException,
+  Param
 } from '@nestjs/common'
 import {
   ApiTags,
@@ -66,12 +67,28 @@ export class UserController {
       throw new NotFoundException('user.not_found')
     }
     const token = sign(user)
-
     const result = {
       ...user,
       token
     }
-
     return result
+  }
+
+  @Get('/verify/:token')
+  @UsePipes(
+    // new JoiValidationPipe({ body: UserPostSignupBodyValidation }),
+    IsUsernameExistPipe
+  )
+  // @ApiOkResponse({ type: FormatResponseFactory(PersonPostCreateResponseDto) })
+  @ApiBadRequestResponse({})
+  async verify(@Param() param: any /*UserPostSignupBodyDto */): Promise<any> {
+    //UserPostSignupResponseDto
+    const { token } = param
+    try {
+      const user = verify(token)
+      return user
+    } catch (error) {
+      throw new NotFoundException('user.not_found')
+    }
   }
 }
