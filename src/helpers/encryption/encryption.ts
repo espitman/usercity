@@ -1,5 +1,7 @@
 import * as bcrypt from 'bcrypt'
-const saltRounds = 10
+import * as config from 'config'
+
+const saltRounds = config.get('encryption.saltRounds') as string
 
 function hash(password) {
   const hashedPassword = new Promise((resolve, reject) => {

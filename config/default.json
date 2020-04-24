@@ -10,5 +10,12 @@
     "database": "UserCity",
     "host": "37.152.181.202",
     "port": 27017
+  },
+  "encryption": {
+    "saltRounds": 10
+  },
+  "jwt": {
+    "privateKey": "boum.golah.2020",
+    "expiresIn": 86400
   }
 }
