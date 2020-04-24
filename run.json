@@ -1,7 +1,7 @@
 {
     "apps": [
         {
-            "name": "Golha-Backend",
+            "name": "UserCity",
             "script": "yarn",
             "args" : "start"
         }
