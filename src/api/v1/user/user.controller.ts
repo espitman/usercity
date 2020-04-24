@@ -15,14 +15,14 @@ import { IsUsernameExistPipe } from '../../../pipes/user/is-username-exist.pipe'
 @ApiTags('User')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Post()
+  @Post('/signup')
   @UsePipes(
     // new JoiValidationPipe({ body: PersonPostCreateBodyValidation }),
     IsUsernameExistPipe
   )
   // @ApiOkResponse({ type: FormatResponseFactory(PersonPostCreateResponseDto) })
   @ApiBadRequestResponse({})
-  create(
+  signup(
     @Body() body: any //PersonPostCreateBodyDto
   ): Promise<any> {
     //PersonPostCreateResponseDto
@@ -37,4 +37,5 @@ export class UserController {
       mobile
     )
   }
+
 }

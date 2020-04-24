@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { UserModel } from './schemas/user.schema'
+import { encrypt } from '../../helpers/encryption/encryption'
 
 @Injectable()
 export class UserService {
@@ -8,7 +9,8 @@ export class UserService {
     @InjectModel('User')
     private readonly userModel: UserModel
   ) {}
-  create(
+
+  async create(
     username: string,
     password: string,
     fname: string,
@@ -18,7 +20,7 @@ export class UserService {
   ) {
     return this.userModel.create({
       username,
-      password,
+      password: await encrypt(password),
       fname,
       lname,
       email,
@@ -28,7 +30,6 @@ export class UserService {
 
   async isExist(param) {
     const count = await this.userModel.countDocuments(param)
-    console.log({ count, param })
     return !!count
   }
 }
