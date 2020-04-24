@@ -6,6 +6,9 @@ import { APP_INTERCEPTOR } from '@nestjs/core'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ResponseInterceptor } from '../interceptors/response/response.interceptor'
+import { UserModule } from '../entities/user/user.module'
+import { UserController } from '../api/v1/user/user.controller'
+import { UserService } from '../entities/user/user.service'
 
 @Module({
   imports: [
@@ -15,13 +18,16 @@ import { ResponseInterceptor } from '../interceptors/response/response.intercept
       )}@${config.get('database.host')}:${config.get(
         'database.port'
       )}/${config.get('database.database')}`
-    )
+    ),
+    UserModule
   ],
   controllers: [
-    AppController
+    AppController,
+    UserController
   ],
   providers: [
     AppService,
+    UserService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor
