@@ -23,6 +23,7 @@ import {
 } from './dto/request/signup.dto'
 import { CheckMobileAndEmailPipe } from '../../../pipes/user/check-mobile-and-email.pipe'
 import { IsUsernameNotExistPipe } from '../../../pipes/user/is-username-not-exist.pipe copy'
+import { sign, verify } from '../../../helpers/jwt/jwt'
 
 @Controller('api/v1/user')
 @ApiTags('User')
@@ -64,6 +65,13 @@ export class UserController {
     if (!user) {
       throw new NotFoundException('user.not_found')
     }
-    return user
+    const token = sign(user)
+
+    const result = {
+      ...user,
+      token
+    }
+
+    return result
   }
 }
