@@ -3,17 +3,18 @@ import { UserService } from '../../entities/user/user.service'
 import { BadRequestException } from '../../exceptions/bad-request.exception'
 
 @Injectable()
-export class IsUsernameExistPipe implements PipeTransform {
+export class IsUsernameNotExistPipe implements PipeTransform {
   constructor(private readonly userService: UserService) {}
   async transform(value: any, metadata: ArgumentMetadata) {
     const { type } = metadata
     if (type !== 'body') {
       return value
     }
-    const { username } = value
+    const { mobile, email } = value
+    const username = mobile || email
     const isExist = await this.userService.isExist({ username })
-    if (!isExist) {
-      throw new BadRequestException('user.not_found')
+    if (isExist) {
+      throw new BadRequestException('user.duplicated')
     }
     return value
   }

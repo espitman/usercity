@@ -3,6 +3,7 @@
 /node_modules
 
 .history
+.vscode
 
 # Logs
 logs
