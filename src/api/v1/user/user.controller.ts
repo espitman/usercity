@@ -25,6 +25,17 @@ import {
 import { CheckMobileAndEmailPipe } from '../../../pipes/user/check-mobile-and-email.pipe'
 import { IsUsernameNotExistPipe } from '../../../pipes/user/is-username-not-exist.pipe copy'
 import { sign, verify } from '../../../helpers/jwt/jwt'
+import {
+  UserGetSigninBodyValidation,
+  UserGetSigninBodyDto
+} from './dto/request/signin.dto'
+import {
+  UserGetVerifyParamValidation,
+  UserGetVerifyParamDto
+} from './dto/request/verify.dto'
+import { UserPostSignupResponseDto } from './dto/response/signup.dto'
+import { UserPostSigninResponseDto } from './dto/response/signin.dto'
+import { UserPostVerifyUserDto } from './dto/response/verify.dto'
 
 @Controller('api/v1/user')
 @ApiTags('User')
@@ -36,13 +47,14 @@ export class UserController {
     CheckMobileAndEmailPipe,
     IsUsernameNotExistPipe
   )
-  // @ApiOkResponse({ type: FormatResponseFactory(PersonPostCreateResponseDto) })
+  @ApiOkResponse({ type: FormatResponseFactory(UserPostSignupResponseDto) })
   @ApiBadRequestResponse({})
-  signup(@Body() body: UserPostSignupBodyDto): Promise<any> {
-    //UserPostSignupResponseDto
+  async signup(
+    @Body() body: UserPostSignupBodyDto
+  ): Promise<UserPostSignupResponseDto> {
     const { password, fname, lname, email, mobile } = body
     const username = mobile || email
-    return this.userService.create(
+    const user = await this.userService.create(
       username,
       password,
       fname,
@@ -50,17 +62,19 @@ export class UserController {
       email,
       mobile
     )
+    return user.toObject()
   }
 
   @Get('/signin')
   @UsePipes(
-    // new JoiValidationPipe({ body: UserPostSignupBodyValidation }),
+    new JoiValidationPipe({ body: UserGetSigninBodyValidation }),
     IsUsernameExistPipe
   )
-  // @ApiOkResponse({ type: FormatResponseFactory(PersonPostCreateResponseDto) })
+  @ApiOkResponse({ type: FormatResponseFactory(UserPostSigninResponseDto) })
   @ApiBadRequestResponse({})
-  async signin(@Body() body: any /*UserPostSignupBodyDto */): Promise<any> {
-    //UserPostSignupResponseDto
+  async signin(
+    @Body() body: UserGetSigninBodyDto
+  ): Promise<UserPostSigninResponseDto> {
     const { username, password } = body
     const user = await this.userService.checkPassword(username, password)
     if (!user) {
@@ -76,17 +90,17 @@ export class UserController {
 
   @Get('/verify/:token')
   @UsePipes(
-    // new JoiValidationPipe({ body: UserPostSignupBodyValidation }),
+    new JoiValidationPipe({ params: UserGetVerifyParamValidation }),
     IsUsernameExistPipe
   )
-  // @ApiOkResponse({ type: FormatResponseFactory(PersonPostCreateResponseDto) })
+  @ApiOkResponse({ type: FormatResponseFactory(UserPostVerifyUserDto) })
   @ApiBadRequestResponse({})
-  async verify(@Param() param: any /*UserPostSignupBodyDto */): Promise<any> {
-    //UserPostSignupResponseDto
+  async verify(
+    @Param() param: UserGetVerifyParamDto
+  ): Promise<UserPostVerifyUserDto> {
     const { token } = param
     try {
-      const user = verify(token)
-      return user
+      return verify(token) as UserPostVerifyUserDto
     } catch (error) {
       throw new NotFoundException('user.not_found')
     }

@@ -35,12 +35,11 @@ export class UserService {
 
   async checkPassword(username: string, password: string) {
     const user = await this.userModel.findOne({ username })
-    const { _id, fname, lname, password: encrypted } = user
+    const { _id, fname, lname, password: encrypted, mobile, email } = user
     const isPasswordCorrect = await check(password, encrypted)
     if (!isPasswordCorrect) {
       return false
     }
-    return { _id, fname, lname, username }
+    return { _id, fname, lname, username, mobile, email }
   }
-
 }
