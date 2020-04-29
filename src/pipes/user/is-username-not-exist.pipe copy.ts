@@ -12,7 +12,9 @@ export class IsUsernameNotExistPipe implements PipeTransform {
     }
     const { mobile, email } = value
     const username = mobile || email
-    const isExist = await this.userService.isExist({ username })
+    const isExist = await this.userService.isExist({
+      $or: [{ mobile: username }, { email: username }]
+    })
     if (isExist) {
       throw new BadRequestException('user.duplicated')
     }

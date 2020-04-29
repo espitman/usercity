@@ -11,7 +11,8 @@ export class IsUsernameExistPipe implements PipeTransform {
       return value
     }
     const { username } = value
-    const isExist = await this.userService.isExist({ username })
+    const query = { $or: [{ mobile: username }, { email: username }] }
+    const isExist = await this.userService.isExist(query)
     if (!isExist) {
       throw new NotFoundException('user.not_found')
     }

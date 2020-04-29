@@ -11,8 +11,8 @@ export const UserSchema = new Schema({
   password: { type: String, required: true, minlength: 8 },
   fname: { type: String, required: true },
   lname: { type: String, required: true },
-  email: { type: String },
-  mobile: { type: String },
+  email: { type: String, index: true, unique: true },
+  mobile: { type: String, index: true, unique: true },
   __v: { type: Number, select: false }
 })
 
