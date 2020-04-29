@@ -16,6 +16,6 @@
   },
   "jwt": {
     "privateKey": "boum.golah.2020",
-    "expiresIn": 86400
+    "expiresIn": 31536000
   }
 }
