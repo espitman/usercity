@@ -65,7 +65,7 @@ export class UserController {
     return user.toObject()
   }
 
-  @Get('/signin')
+  @Post('/signin')
   @UsePipes(
     new JoiValidationPipe({ body: UserGetSigninBodyValidation }),
     IsUsernameExistPipe
